@@ -1,5 +1,5 @@
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/cypherdh/VanisUILIB/main/.gitignore"))()
-local Window = library:CreateWindow("Fruit Battlegrounds", "", 10044538000)
+local Window = library:CreateWindow("Fruit Battlegrounds", "i suck at scripting", 10044538000)
 local Tab = Window:CreateTab("Scripts")
 local Page = Tab:CreateFrame("Autofarm")
 
