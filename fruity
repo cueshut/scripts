@@ -17,7 +17,7 @@ TextBox = Page:CreateBox("Delay between attack", 10044538000, function(delay)
     delayn = delay
 end)
 
-TextBox = Page:CreateBox("Attack", 10044538000, function(attack1) 
+TextBox = Page:CreateBox("Attack Name", 10044538000, function(attack1) 
     getgenv().crap2 = attack1
     fruitattack1 = attack1
 end)
