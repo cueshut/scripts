@@ -2716,15 +2716,14 @@ do
 
 
 Library.ArmorViewer = function(self)
-	local Viewer = {
-		Items = {},
-	}
-
+	local Viewer = {}
 	local Items = {}
+	local TextLabels = {} -- Track all text labels
+	
 	do
 		Items["ArmorViewer"] = Instances:Create("Frame", {
 			Parent = Library.Holder.Instance,
-			Name = "\0",
+			Name = "ArmorViewer_" .. tostring(tick()), -- Unique name
 			Position = UDim2New(0, 0, 0.5, 0),
 			BorderColor3 = FromRGB(0, 0, 0),
 			Size = UDim2New(0, 250, 0, 300),
@@ -2852,11 +2851,9 @@ Library.ArmorViewer = function(self)
 	end
 
 	function Viewer:Add(Name)
-		local NewItemTable = {}
-
 		local NewItem = Instances:Create("TextLabel", {
 			Parent = Items["RealHolder"].Instance,
-			Name = "\0",
+			Name = "Item_" .. tostring(#TextLabels + 1),
 			FontFace = Library.Font,
 			TextColor3 = FromRGB(255, 255, 255),
 			TextTransparency = 0.4,
@@ -2870,40 +2867,45 @@ Library.ArmorViewer = function(self)
 			BackgroundColor3 = FromRGB(255, 255, 255),
 		})
 		NewItem:AddToTheme({ TextColor3 = "Text" })
-
-		function NewItemTable:Remove()
-			if NewItem and NewItem.Instance then
-				NewItem.Instance:Destroy()
-			end
-		end
-
-		function NewItemTable:SetText(NewText)
-			if NewItem and NewItem.Instance then
-				NewItem.Instance.Text = "• " .. NewText
-			end
-		end
-
-		table.insert(Viewer.Items, NewItemTable)
-		return NewItemTable
+		
+		table.insert(TextLabels, NewItem)
+		return NewItem
 	end
 
 	function Viewer:ClearAllItems()
-		for _, Item in ipairs(Viewer.Items) do
-			Item:Remove()
+		-- Destroy all text labels
+		for _, label in ipairs(TextLabels) do
+			if label and label.Instance then
+				label.Instance:Destroy()
+			end
 		end
-		Viewer.Items = {}
+		TextLabels = {}
+	end
+
+	function Viewer:Destroy()
+		-- Destroy entire viewer
+		Viewer:ClearAllItems()
+		if Items["ArmorViewer"] and Items["ArmorViewer"].Instance then
+			Items["ArmorViewer"].Instance:Destroy()
+		end
 	end
 
 	function Viewer:SetVisibility(Bool)
-		Items["ArmorViewer"].Instance.Visible = Bool
+		if Items["ArmorViewer"] and Items["ArmorViewer"].Instance then
+			Items["ArmorViewer"].Instance.Visible = Bool
+		end
 	end
 
 	function Viewer:SetTitle(Name)
-		Items["Title"].Instance.Text = Name
+		if Items["Title"] and Items["Title"].Instance then
+			Items["Title"].Instance.Text = Name
+		end
 	end
 
 	function Viewer:SetPosition(Position)
-		Items["ArmorViewer"].Instance.Position = Position
+		if Items["ArmorViewer"] and Items["ArmorViewer"].Instance then
+			Items["ArmorViewer"].Instance.Position = Position
+		end
 	end
 
 	return Viewer
