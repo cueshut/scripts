@@ -2715,7 +2715,7 @@ do
 		end
 
 
-		Library.ArmorViewer = function(self)
+Library.ArmorViewer = function(self)
 	local Viewer = {
 		Items = {},
 	}
@@ -2834,7 +2834,6 @@ do
 		})
 		Items["RealHolder"]:AddToTheme({ ScrollBarImageColor3 = "Border" })
 
-		-- CHANGED: UIListLayout instead of UIGridLayout for vertical text list
 		Instances:Create("UIListLayout", {
 			Parent = Items["RealHolder"].Instance,
 			Name = "\0",
@@ -2852,7 +2851,6 @@ do
 		})
 	end
 
-	-- CHANGED: Add function now creates TextLabel instead of Frame with ImageLabel
 	function Viewer:Add(Name)
 		local NewItemTable = {}
 
@@ -2874,22 +2872,26 @@ do
 		NewItem:AddToTheme({ TextColor3 = "Text" })
 
 		function NewItemTable:Remove()
-			NewItem:Clean()
-			Viewer.Items[Name] = nil
+			if NewItem and NewItem.Instance then
+				NewItem.Instance:Destroy()
+			end
 		end
 
 		function NewItemTable:SetText(NewText)
-			NewItem.Instance.Text = "• " .. NewText
+			if NewItem and NewItem.Instance then
+				NewItem.Instance.Text = "• " .. NewText
+			end
 		end
 
-		Viewer.Items[Name] = NewItemTable
+		table.insert(Viewer.Items, NewItemTable)
 		return NewItemTable
 	end
 
 	function Viewer:ClearAllItems()
-		for Index, Value in Viewer.Items do
-			Value:Remove()
+		for _, Item in ipairs(Viewer.Items) do
+			Item:Remove()
 		end
+		Viewer.Items = {}
 	end
 
 	function Viewer:SetVisibility(Bool)
